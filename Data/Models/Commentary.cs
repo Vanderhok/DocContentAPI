@@ -8,7 +8,7 @@ namespace DocContentAPI.Models
 {
     public class Commentary
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public int DocId { get; set; }
         public Guid UserId { get; set; }
         public DateTime DateAdd { get; set; }

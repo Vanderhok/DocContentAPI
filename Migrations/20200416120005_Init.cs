@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DocContentAPI.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,9 +11,9 @@ namespace DocContentAPI.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     DocId = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
                     DateAdd = table.Column<DateTime>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     TopicName = table.Column<string>(nullable: true),

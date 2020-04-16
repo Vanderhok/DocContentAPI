@@ -21,10 +21,9 @@ namespace DocContentAPI.Migrations
 
             modelBuilder.Entity("DocContentAPI.Models.Commentary", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Changed")
                         .HasColumnType("int");
@@ -55,6 +54,9 @@ namespace DocContentAPI.Migrations
 
                     b.Property<string>("TopicName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

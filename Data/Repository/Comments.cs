@@ -1,5 +1,6 @@
 ﻿using DocContentAPI.Data;
 using DocContentAPI.Models;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +10,25 @@ namespace DocContentAPI
 {
     public class Comments : IComments
     {
-        private readonly CommentaryContext commentaryContext;
+        private CommentaryContext commentaryContext;
 
         public Comments(CommentaryContext commentaryContext)
         {
             this.commentaryContext = commentaryContext;
         }
 
-        public int AddComment(Commentary commentary)
+        public Guid AddComment(Commentary commentary)
         {
-            throw new NotImplementedException();
+            commentary.Id = new Guid();
+            commentaryContext.Comments.Add(commentary);
+            commentaryContext.SaveChanges();
+            return commentary.Id;
         }
 
-        public IEnumerable<Commentary> GetComments(int DocId) => commentaryContext.Comments.Where(x => x.DocId == DocId);
-      
+     
+        public IEnumerable<Commentary> GetComments(int docId) => commentaryContext.Comments.Where(x => x.DocId == docId);
 
-        public IEnumerable<Commentary> GetComments(Guid UserId) => commentaryContext.Comments.Where(x => x.UserId == UserId);
+        public IEnumerable<Commentary> GetComments(Guid userId) => commentaryContext.Comments.Where(x => x.UserId == userId);
        
     }
 }

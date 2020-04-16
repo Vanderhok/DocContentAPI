@@ -23,9 +23,8 @@ namespace DocContentAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IComments, Comments>();
-
             services.AddControllers();
+            services.AddTransient<IComments, Comments>();
 
             services.AddDbContext<CommentaryContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -34,19 +33,25 @@ namespace DocContentAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            CommentaryContext context;
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                context = scope.ServiceProvider.GetRequiredService<CommentaryContext>();
+                DBObjects.Initial(context);
+            }
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DocContentAPI.Migrations
 {
     [DbContext(typeof(CommentaryContext))]
-    [Migration("20200414064916_init")]
-    partial class init
+    [Migration("20200416120005_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,10 +23,9 @@ namespace DocContentAPI.Migrations
 
             modelBuilder.Entity("DocContentAPI.Models.Commentary", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Changed")
                         .HasColumnType("int");
@@ -57,6 +56,9 @@ namespace DocContentAPI.Migrations
 
                     b.Property<string>("TopicName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
