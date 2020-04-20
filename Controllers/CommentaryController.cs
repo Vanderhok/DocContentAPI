@@ -19,19 +19,19 @@ namespace DocContentAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public Commentary Get([FromBody]Commentary comment)
         {
-            return Ok();
+            return comments.GetCommentsData(comment);
         }
 
-        //https://localhost:44308/api/Commentary/2
+        //http://localhost:2233/api/Commentary/2
         [HttpGet("{id:int}")]
         public IEnumerable<Commentary> GetComments(int id)
         {
             return comments.GetComments(id);
         }
 
-        //https://localhost:44308/api/Commentary/cb053101-6252-4bec-923e-dcf2fe6ecc7f
+        //http://localhost:2233/api/Commentary/cb053101-6252-4bec-923e-dcf2fe6ecc7f
         [HttpGet("{id:guid}")]
         public IEnumerable<Commentary> GetComments(Guid id)
         {
@@ -39,12 +39,10 @@ namespace DocContentAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Commentary commentary)
+        public ActionResult Post([FromBody]Commentary comment)
         {
-            commentary.Id = Guid.NewGuid();
-            commentary.DocId = 55;
+            comments.AddComment(comment);
 
-            comments.AddComment(commentary);
             return Ok();
         }
 

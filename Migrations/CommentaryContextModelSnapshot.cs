@@ -43,6 +43,9 @@ namespace DocContentAPI.Migrations
                     b.Property<int>("Notificated")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Pos")
                         .HasColumnType("int");
 

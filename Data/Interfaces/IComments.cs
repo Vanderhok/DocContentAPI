@@ -11,18 +11,19 @@ namespace DocContentAPI
         public Guid AddComment(Commentary commentary);
 
         /// <summary>
-        /// By DocId
+        /// Get Comments by DocId
         /// </summary>
-        /// <param name="DocId"></param>
+        /// <param name="docId"></param>
         /// <returns></returns>
         public IEnumerable<Commentary> GetComments(int docId);
 
         /// <summary>
-        /// By UserId
+        /// Get Comments by UserId
         /// </summary>
-        /// <param name="UserId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         public IEnumerable<Commentary> GetComments(Guid userId);
 
+        public CommentsData GetCommentsData(Commentary commentary);
     }
 }

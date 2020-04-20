@@ -15,10 +15,12 @@ namespace DocContentAPI.Data
 
             if (!context.Comments.Any())
             {
-                context.Comments.Add(new Commentary { DocId = 1, UserId = Guid.NewGuid() });
-                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid() });
-                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid() });
-                context.Comments.Add(new Commentary { DocId = 4, UserId = Guid.NewGuid() });
+                Guid[] newGuids = { Guid.NewGuid(), Guid.NewGuid() };
+                context.Comments.Add(new Commentary { DocId = 1, UserId = Guid.NewGuid(), ParentId = Guid.Empty, Id= newGuids[0]});
+                context.Comments.Add(new Commentary { DocId = 1, UserId = Guid.NewGuid(), ParentId = newGuids[0] });
+                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[0] , Id= newGuids[1]});
+                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[1] });
+                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[1] });
 
                 context.SaveChanges();
 

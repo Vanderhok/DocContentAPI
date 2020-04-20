@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DocContentAPI.Migrations
 {
     [DbContext(typeof(CommentaryContext))]
-    [Migration("20200416120005_Init")]
+    [Migration("20200419051839_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,9 @@ namespace DocContentAPI.Migrations
 
                     b.Property<int>("Notificated")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Pos")
                         .HasColumnType("int");

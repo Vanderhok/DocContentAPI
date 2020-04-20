@@ -12,8 +12,9 @@ namespace DocContentAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    DocId = table.Column<int>(nullable: false),
+                    ParentId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
+                    DocId = table.Column<int>(nullable: false),
                     DateAdd = table.Column<DateTime>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     TopicName = table.Column<string>(nullable: true),

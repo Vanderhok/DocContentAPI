@@ -1,6 +1,7 @@
 ﻿using DocContentAPI.Data;
 using DocContentAPI.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +18,31 @@ namespace DocContentAPI
             this.commentaryContext = commentaryContext;
         }
 
-        public Guid AddComment(Commentary commentary)
+        public Guid AddComment(Commentary comment)
         {
-            commentary.Id = new Guid();
-            commentaryContext.Comments.Add(commentary);
+            comment.Id = Guid.NewGuid();
+            commentaryContext.Comments.Add(comment);
             commentaryContext.SaveChanges();
-            return commentary.Id;
+            return comment.Id;
         }
 
-     
+
         public IEnumerable<Commentary> GetComments(int docId) => commentaryContext.Comments.Where(x => x.DocId == docId);
 
         public IEnumerable<Commentary> GetComments(Guid userId) => commentaryContext.Comments.Where(x => x.UserId == userId);
-       
+
+        public CommentsData GetCommentsData(Commentary commentary)
+        {
+            CommentsData commentsList = new CommentsData
+            {
+                Id = commentary.Id,
+                DocId = commentary.DocId,
+                //...
+                Answers = commentaryContext.Comments.Where(x => x.ParentId == commentary.Id).ToList()
+            };
+            return commentsList;
+        }
+
+
     }
 }

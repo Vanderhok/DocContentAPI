@@ -9,8 +9,9 @@ namespace DocContentAPI.Models
     public class Commentary
     {
         public Guid Id { get; set; }
-        public int DocId { get; set; }
+        public Guid ParentId { get; set; }
         public Guid UserId { get; set; }
+        public int DocId { get; set; }
         public DateTime DateAdd { get; set; }
         public string Text { get; set; }
         public string TopicName { get; set; }
@@ -22,4 +23,8 @@ namespace DocContentAPI.Models
         public bool Preactive { get; set; } = false;
     }
 
+    public class CommentsData : Commentary
+    {
+        public List<Commentary> Answers { get; set; }
+    }
 }
