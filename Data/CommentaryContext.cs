@@ -15,5 +15,10 @@ namespace DocContentAPI.Data
         }
 
         public DbSet<Commentary> Comments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<Comments>().HasMany(s => s.).WithOne(s => s.School);
+        }
     }
 }

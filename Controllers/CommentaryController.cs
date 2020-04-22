@@ -18,21 +18,23 @@ namespace DocContentAPI.Controllers
             this.comments = comments;
         }
 
-        [HttpGet]
-        public Commentary Get([FromBody]Commentary comment)
+
+        //http://localhost:2233/api/Commentary/GetCommentsData/
+        [HttpGet("GetCommentsData/{id:guid}")]
+        public CommentsData Get(Guid id)
         {
-            return comments.GetCommentsData(comment);
+            return comments.GetCommentsData(id);
         }
 
-        //http://localhost:2233/api/Commentary/2
-        [HttpGet("{id:int}")]
+        //http://localhost:2233/api/Commentary/GetComments/2
+        [HttpGet("GetComments/{id:int}")]
         public IEnumerable<Commentary> GetComments(int id)
         {
             return comments.GetComments(id);
         }
 
-        //http://localhost:2233/api/Commentary/cb053101-6252-4bec-923e-dcf2fe6ecc7f
-        [HttpGet("{id:guid}")]
+        //http://localhost:2233/api/Commentary/GetComments/
+        [HttpGet("GetComments/{id:guid}")]
         public IEnumerable<Commentary> GetComments(Guid id)
         {
             return comments.GetComments(id);

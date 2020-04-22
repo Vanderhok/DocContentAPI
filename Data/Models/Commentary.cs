@@ -21,10 +21,14 @@ namespace DocContentAPI.Models
         public int Notificated { get; set; } = 0;
         public bool Noactive { get; set; } = false;
         public bool Preactive { get; set; } = false;
+        //public List<Commentary> Answers { get; set; }
     }
 
-    public class CommentsData : Commentary
+    public class CommentsData
     {
-        public List<Commentary> Answers { get; set; }
+        public Guid Id { get; set; }
+        public Guid ParentId { get; set; }
+        public string Text { get; set; }
+        public List<CommentsData> Answers { get; set; }
     }
 }

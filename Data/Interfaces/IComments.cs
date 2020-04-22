@@ -24,6 +24,6 @@ namespace DocContentAPI
         /// <returns></returns>
         public IEnumerable<Commentary> GetComments(Guid userId);
 
-        public CommentsData GetCommentsData(Commentary commentary);
+        public CommentsData GetCommentsData(Guid id);
     }
 }
