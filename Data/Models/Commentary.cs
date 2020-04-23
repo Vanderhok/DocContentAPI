@@ -9,7 +9,6 @@ namespace DocContentAPI.Models
     public class Commentary
     {
         public Guid Id { get; set; }
-        public Guid ParentId { get; set; }
         public Guid UserId { get; set; }
         public int DocId { get; set; }
         public DateTime DateAdd { get; set; }
@@ -21,14 +20,7 @@ namespace DocContentAPI.Models
         public int Notificated { get; set; } = 0;
         public bool Noactive { get; set; } = false;
         public bool Preactive { get; set; } = false;
-        //public List<Commentary> Answers { get; set; }
-    }
-
-    public class CommentsData
-    {
-        public Guid Id { get; set; }
-        public Guid ParentId { get; set; }
-        public string Text { get; set; }
-        public List<CommentsData> Answers { get; set; }
+        public List<Commentary> Answers { get; set; }
+        public virtual Commentary ParentCommentary { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace DocContentAPI.Migrations
                     b.Property<int>("Notificated")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<Guid?>("ParentCommentaryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Pos")
@@ -63,7 +63,16 @@ namespace DocContentAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Comments");
+                    b.HasIndex("ParentCommentaryId");
+
+                    b.ToTable("Commentaries");
+                });
+
+            modelBuilder.Entity("DocContentAPI.Models.Commentary", b =>
+                {
+                    b.HasOne("DocContentAPI.Models.Commentary", "ParentCommentary")
+                        .WithMany("Answers")
+                        .HasForeignKey("ParentCommentaryId");
                 });
 #pragma warning restore 612, 618
         }

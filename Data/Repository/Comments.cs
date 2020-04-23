@@ -23,46 +23,30 @@ namespace DocContentAPI
             comment.Id = Guid.NewGuid();
             comment.UserId = Guid.NewGuid();
 
-            commentaryContext.Comments.Add(comment);
+            commentaryContext.Commentaries.Add(comment);
             commentaryContext.SaveChanges();
 
             return comment.Id;
         }
 
 
-        public IEnumerable<Commentary> GetComments(int docId) => commentaryContext.Comments.Where(x => x.DocId == docId);
+        public IEnumerable<Commentary> GetComments(int docId) => commentaryContext.Commentaries.Where(x => x.DocId == docId);
 
-        public IEnumerable<Commentary> GetComments(Guid userId) => commentaryContext.Comments.Where(x => x.UserId == userId);
+        public IEnumerable<Commentary> GetComments(Guid userId) => commentaryContext.Commentaries.Where(x => x.UserId == userId);
 
-        public CommentsData GetCommentsData(Guid id)
+        public Commentary GetCommentData(Guid id)
         {
-            Commentary commentary = new Commentary();
+            //var query = from comment in commentaryContext.Commentaries
+            //            join comment2 in commentaryContext.Commentaries
+            //            on comment.Id equals comment2.ParentId
+            //            where comment.Id == id
+            //            select new { comment = comment, comment2 = comment2 };
+            //var result = query.ToList();
+            //var parrent = new Commentary();
+            //parrent.Id = result[0].comment.Id;
+            //parrent.Answers = result.Select(e => e.comment2).ToList();
 
-            commentary = commentaryContext.Comments.Where(x => x.Id == id).FirstOrDefault();
-
-            // List<Commentary> commentaries = commentaryContext.Comments.Where(x => x.Id == id).Include(y => y.ParentId == id).ToList();
-
-           CommentsData commentsList = new CommentsData
-            {
-                Id = commentary.Id,
-                Text = commentary.Text,
-                ParentId = commentary.ParentId,
-                Answers = new List<CommentsData>(),
-            };
-
-            List<Commentary> childComments = commentaryContext.Comments.Where(x => x.ParentId == id).ToList();
-
-            foreach (Commentary comment in childComments)
-            {
-                commentsList.Answers.Add(new CommentsData
-                {
-                    Id = comment.Id,
-                    Text = comment.Text,
-                    ParentId = comment.ParentId,
-                });
-            }
-
-            return commentsList;
+            return commentaryContext.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
         }
 
 

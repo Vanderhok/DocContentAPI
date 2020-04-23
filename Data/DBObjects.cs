@@ -13,14 +13,16 @@ namespace DocContentAPI.Data
         public static void Initial(CommentaryContext context)
         {
 
-            if (!context.Comments.Any())
+            if (!context.Commentaries.Any())
             {
-                Guid[] newGuids = { Guid.NewGuid(), Guid.NewGuid() };
-                context.Comments.Add(new Commentary { DocId = 1, UserId = Guid.NewGuid(), ParentId = Guid.Empty, Id= newGuids[0]});
-                context.Comments.Add(new Commentary { DocId = 1, UserId = Guid.NewGuid(), ParentId = newGuids[0] });
-                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[0] , Id= newGuids[1]});
-                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[1] });
-                context.Comments.Add(new Commentary { DocId = 2, UserId = Guid.NewGuid(), ParentId = newGuids[1] });
+                Guid parentGuid = Guid.Parse("cfc77d77-4d4c-4514-b632-a80aa7411152");
+
+                List<Commentary> childComments = new List<Commentary>();
+                childComments.Add(new Commentary { });
+                childComments.Add(new Commentary { });
+
+                var comment = new Commentary { DocId = 1, UserId = Guid.NewGuid(), Id = parentGuid, Answers = childComments };
+                context.Commentaries.Add(comment);
 
                 context.SaveChanges();
 
