@@ -24,20 +24,19 @@ namespace DocContentAPI.Controllers
         [HttpGet("GetCommentData/{id:guid}")]
         public Commentary GetCommentData(Guid id)
         {
-            //var options = new System.Text.Json.JsonSerializerOptions
-            //{
-            //    ReferenceHandling= ReferenceHandling.Preserve
-            //};
-
-            //var result = comments.GetCommentData(id);
-            //string json = JsonSerializer.Serialize(result, options);
-
-            return comments.GetCommentData(id);
+            return comments.GetCommentData(id);     //S* Для использования раскоментить //S*527 (Startup)
         }
 
-        //http://localhost:2233/api/Commentary/GetComments/2
+        //http://localhost:2233/api/Commentary/GetCommentWithAnswers/cfc77d77-4d4c-4514-b632-a80aa7411152
+        [HttpGet("GetCommentWithAnswers/{id:guid}")]
+        public  RequestCommentMdl GetCommentWithAnswers(Guid id)
+        {
+            return comments.GetCommentWithAnswers(id);
+        }
+
+        //http://localhost:2233/api/Commentary/GetComments/1
         [HttpGet("GetComments/{id:int}")]
-        public IEnumerable<Commentary> GetComments(int id)
+        public IEnumerable<RequestCommentMdl> GetComments(int id)
         {
             return comments.GetComments(id);
         }

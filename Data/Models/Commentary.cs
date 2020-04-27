@@ -23,4 +23,11 @@ namespace DocContentAPI.Models
         public List<Commentary> Answers { get; set; }
         public virtual Commentary ParentCommentary { get; set; }
     }
+
+    public class RequestCommentMdl
+    {
+        public Guid Id { get; set; }
+        public string Text { get; set; }
+        public List<RequestCommentMdl> Child { get; set; }
+    }
 }

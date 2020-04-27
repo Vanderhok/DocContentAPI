@@ -11,9 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
 namespace DocContentAPI
 {
     public class Startup
@@ -27,14 +24,14 @@ namespace DocContentAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //S*527
+            //services.AddMvc().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddTransient<IComments, Comments>();
 
             services.AddDbContext<CommentaryContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddMvc().AddJsonOptions(options => {
-                options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +52,7 @@ namespace DocContentAPI
             }
 
             app.UseRouting();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
