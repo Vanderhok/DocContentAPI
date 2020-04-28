@@ -29,14 +29,14 @@ namespace DocContentAPI.Controllers
 
         //http://localhost:2233/api/Commentary/GetCommentWithAnswers/cfc77d77-4d4c-4514-b632-a80aa7411152
         [HttpGet("GetCommentWithAnswers/{id:guid}")]
-        public  RequestCommentMdl GetCommentWithAnswers(Guid id)
+        public  RequestComment GetCommentWithAnswers(Guid id)
         {
             return comments.GetCommentWithAnswers(id);
         }
 
         //http://localhost:2233/api/Commentary/GetComments/1
         [HttpGet("GetComments/{id:int}")]
-        public IEnumerable<RequestCommentMdl> GetComments(int id)
+        public IEnumerable<RequestComment> GetComments(int id)
         {
             return comments.GetComments(id);
         }

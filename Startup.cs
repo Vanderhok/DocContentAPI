@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DocContentAPI.Data;
+using DocContentAPI.Data.Interfaces;
+using DocContentAPI.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,19 +31,20 @@ namespace DocContentAPI
             //services.AddMvc().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddTransient<IComments, Comments>();
+            services.AddTransient<IBookmarks, Bookmarks>();
 
-            services.AddDbContext<CommentaryContext>(options =>
+            services.AddDbContext<LawyerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            CommentaryContext context;
+            LawyerContext context;
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                context = scope.ServiceProvider.GetRequiredService<CommentaryContext>();
+                context = scope.ServiceProvider.GetRequiredService<LawyerContext>();
                 DBObjects.Initial(context);
             }
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DocContentAPI.Migrations
 {
-    [DbContext(typeof(CommentaryContext))]
+    [DbContext(typeof(LawyerContext))]
     [Migration("20200422113735_First")]
     partial class First
     {

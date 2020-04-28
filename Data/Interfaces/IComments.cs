@@ -15,7 +15,7 @@ namespace DocContentAPI
         /// </summary>
         /// <param name="docId"></param>
         /// <returns></returns>
-        public IEnumerable<RequestCommentMdl> GetComments(int docId);
+        public IEnumerable<RequestComment> GetComments(int docId);
 
         /// <summary>
         /// Get Comments by UserId
@@ -26,6 +26,6 @@ namespace DocContentAPI
 
         public Commentary GetCommentData(Guid id);
 
-        public RequestCommentMdl GetCommentWithAnswers(Guid id);
+        public RequestComment GetCommentWithAnswers(Guid id);
    }
 }

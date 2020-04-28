@@ -11,9 +11,9 @@ namespace DocContentAPI
 {
     public class Comments : IComments
     {
-        private readonly CommentaryContext commentaryContext;
+        private readonly LawyerContext commentaryContext;
 
-        public Comments(CommentaryContext commentaryContext)
+        public Comments(LawyerContext commentaryContext)
         {
             this.commentaryContext = commentaryContext;
         }
@@ -46,7 +46,7 @@ namespace DocContentAPI
             return dict.Values.First(elem => elem.ParentCommentary == null);
         }
 
-        public IEnumerable<RequestCommentMdl> GetComments(int docId)
+        public IEnumerable<RequestComment> GetComments(int docId)
         {
             //ExampleTreeByDictionary(docId);
             var context = commentaryContext.Commentaries.Where(x => x.DocId == docId).ToList();
@@ -54,7 +54,7 @@ namespace DocContentAPI
 
             if (context != null && context.Any())
             {
-                List<RequestCommentMdl> requestList = new List<RequestCommentMdl> { };
+                List<RequestComment> requestList = new List<RequestComment> { };
                 foreach (Commentary commentary in context)
                 {
                     requestList.Add(GetChilds(commentary));
@@ -74,7 +74,7 @@ namespace DocContentAPI
             return commentaryContext.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
         }
 
-        public RequestCommentMdl GetCommentWithAnswers(Guid id)
+        public RequestComment GetCommentWithAnswers(Guid id)
         {
             #region Example
             {
@@ -108,9 +108,9 @@ namespace DocContentAPI
             return GetChilds(context);
         }
 
-        private RequestCommentMdl GetChilds(Commentary a)
+        private RequestComment GetChilds(Commentary a)
         {
-            var b = new RequestCommentMdl
+            var b = new RequestComment
             {
                 Id = a.Id,
                 Text = a.Text
