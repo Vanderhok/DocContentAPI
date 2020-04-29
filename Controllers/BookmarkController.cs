@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocContentAPI.Data.Interfaces;
 using DocContentAPI.Data.Models;
+using DocContentAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocContentAPI.Controllers
@@ -18,43 +19,45 @@ namespace DocContentAPI.Controllers
             this.bookmarks = bookmarks;
         }
 
-        //http://localhost:2233/api/Bookmark/AddBookmark
         [HttpPost("AddBookmark")]
-        public ActionResult AddBookmark([FromBody]Bookmark bookmark)
+        public ActionResult AddBookmark(AddBookmarkModel model)
         {
-            bookmarks.Add(bookmark);
+            bookmarks.Add(model);
 
             return Ok();
         }
 
-        //http://localhost:2233/api/Bookmark/RemoveBookmarks
-        [HttpPost("RemoveBookmarks")]
-        public ActionResult RemoveBookmarks([FromBody]Bookmark bookmark)
+        [HttpDelete("RemoveBookmarks")]
+        public ActionResult RemoveBookmarks(RemoveBookmarkModel model)
         {
-            bookmarks.Remove(bookmark);
+            bookmarks.Remove(model);
             return Ok();
         }
 
-        //http://localhost:2233/api/Bookmark/ReplaceBookmark
-        [HttpPost("ReplaceBookmark")]
-        public ActionResult ReplaceBookmark(Guid userId, int docId, string title, int view, int page, int scrollPos, Guid folderId)
+        [HttpPut("ReplaceBookmark")]
+        public ActionResult ReplaceBookmark(ReplaceBookmarkModel model)
         {
-            bookmarks.Replace(userId, docId, title, view, page, scrollPos, folderId);
+            bookmarks.Replace(model);
             return Ok();
         }
 
-        //http://localhost:2233/api/Bookmark/FindBookmark
+        [HttpPut("RenameBookmark")]
+        public ActionResult RenameBookmark(RenameBookmarkModel model)
+        {
+            bookmarks.Rename(model);
+            return Ok();
+        }
+
         [HttpGet("FindBookmark")]
-        public BookmarkRequest FindBookmark(Guid userId, int docId, int view, int page, int scrollPos, Guid folderId)
+        public RequestBookmarkModel FindBookmark(FindBookmarkModel model)
         {
-            return bookmarks.Find(userId, docId, view, page, scrollPos, folderId);
+            return bookmarks.Find(model);
         }
 
-        //http://localhost:2233/api/Bookmark/GetBookmarks
         [HttpGet("GetBookmarks")]
-        public BookmarksResult GetBookmarks(Guid userId, int fromPos, int count, Guid folderId, int topicId, int pos, DocsSort sort)
+        public ResultBookmarkModel GetBookmarks(GetBookmarksModel model)
         {
-            return bookmarks.Get(userId, fromPos, count, folderId, topicId, pos, sort);
+            return bookmarks.Get(model);
         }
     }
 }

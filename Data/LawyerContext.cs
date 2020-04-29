@@ -15,12 +15,12 @@ namespace DocContentAPI.Data
             //Database.EnsureCreated();
         }
 
-        public DbSet<Commentary> Commentaries { get; set; }
-        public DbSet<Bookmark> Bookmarks { get; set; }
+        public DbSet<CommentaryModel> Commentaries { get; set; }
+        public DbSet<BookmarkModel> Bookmarks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Commentary>()
+            modelBuilder.Entity<CommentaryModel>()
                 .HasOne(o => o.ParentCommentary)
                 .WithMany(m => m.Answers);
         }

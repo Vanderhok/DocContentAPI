@@ -22,7 +22,7 @@ namespace DocContentAPI.Controllers
        
         //http://localhost:2233/api/Commentary/GetCommentData/cfc77d77-4d4c-4514-b632-a80aa7411152
         [HttpGet("GetCommentData/{id:guid}")]
-        public Commentary GetCommentData(Guid id)
+        public CommentaryModel GetCommentData(Guid id)
         {
             return comments.GetCommentData(id);     //S* Для использования раскоментить //S*527 (Startup)
         }
@@ -43,15 +43,15 @@ namespace DocContentAPI.Controllers
 
         //http://localhost:2233/api/Commentary/GetComments/217717ba-b416-4b80-6d76-08d7e683b72c
         [HttpGet("GetComments/{id:guid}")]
-        public IEnumerable<Commentary> GetComments(Guid id)
+        public IEnumerable<CommentaryModel> GetComments(Guid id)
         {
             return comments.GetComments(id);
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody]Commentary comment)
+        public ActionResult Post([FromBody]CommentaryModel model)
         {
-            comments.AddComment(comment);
+            comments.AddComment(model);
 
             return Ok();
         }

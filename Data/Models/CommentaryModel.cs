@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DocContentAPI.Models
 {
-    public class Commentary
+    public class CommentaryModel
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -20,8 +20,8 @@ namespace DocContentAPI.Models
         public int Notificated { get; set; } = 0;
         public bool Noactive { get; set; } = false;
         public bool Preactive { get; set; } = false;
-        public List<Commentary> Answers { get; set; }
-        public virtual Commentary ParentCommentary { get; set; }
+        public List<CommentaryModel> Answers { get; set; }
+        public virtual CommentaryModel ParentCommentary { get; set; }
     }
 
     public class RequestComment

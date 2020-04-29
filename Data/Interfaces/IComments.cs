@@ -8,7 +8,7 @@ namespace DocContentAPI
 {
   public  interface IComments
     {
-        public Guid AddComment(Commentary commentary);
+        public Guid AddComment(CommentaryModel commentary);
 
         /// <summary>
         /// Get Comments by DocId
@@ -22,9 +22,9 @@ namespace DocContentAPI
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IEnumerable<Commentary> GetComments(Guid userId);
+        public IEnumerable<CommentaryModel> GetComments(Guid userId);
 
-        public Commentary GetCommentData(Guid id);
+        public CommentaryModel GetCommentData(Guid id);
 
         public RequestComment GetCommentWithAnswers(Guid id);
    }

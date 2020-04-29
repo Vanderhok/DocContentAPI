@@ -1,4 +1,5 @@
 ﻿using DocContentAPI.Data.Models;
+using DocContentAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,38 @@ namespace DocContentAPI.Data.Interfaces
 {
     public interface IBookmarks
     {
-        public Guid Add(Bookmark bookmark);
+        public Guid Add(AddBookmarkModel model);
 
-        public bool Remove(Bookmark bookmark);
+        public bool Remove(RemoveBookmarkModel model);
 
-        public BookmarkRequest Find(Guid userId, int docId, int view, int page, int scrollpos, Guid folderId);
+        public RequestBookmarkModel Find(FindBookmarkModel model);
 
-        public BookmarksResult Get(Guid userId, int fromPos, int count, Guid folderId, int topicId, int pos, DocsSort sort = DocsSort.ByName);
+        public ResultBookmarkModel Get(GetBookmarksModel model);
 
-        public Guid Replace(Guid userId, int docId, string title, int view, int page, int scrollpos, Guid folder_id);
+        public Guid Replace(ReplaceBookmarkModel model);
+
+        public bool Rename(RenameBookmarkModel model);
     }
+
+
+    #region Example
+    public class Ashot : IA12, IA23 { 
+        public int A1 { get; set; }
+        public int A2 { get; set; }
+        public int A3 { get; set; }
+    }
+
+    interface IA12
+    {
+        public int A1 { get; set; }
+        public int A2 { get; set; }
+    }
+
+    interface IA23
+    {
+        public int A3 { get; set; }
+        public int A2 { get; set; }
+    }
+    #endregion
+
 }

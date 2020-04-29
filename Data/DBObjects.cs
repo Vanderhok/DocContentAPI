@@ -18,11 +18,11 @@ namespace DocContentAPI.Data
             {
                 Guid parentGuid = Guid.Parse("cfc77d77-4d4c-4514-b632-a80aa7411152");
 
-                List<Commentary> childComments = new List<Commentary>();
-                childComments.Add(new Commentary { });
-                childComments.Add(new Commentary { });
+                List<CommentaryModel> childComments = new List<CommentaryModel>();
+                childComments.Add(new CommentaryModel { });
+                childComments.Add(new CommentaryModel { });
 
-                var comment = new Commentary { DocId = 1, UserId = Guid.NewGuid(), Id = parentGuid, Answers = childComments };
+                var comment = new CommentaryModel { DocId = 1, UserId = Guid.NewGuid(), Id = parentGuid, Answers = childComments };
                 context.Commentaries.Add(comment);
 
                 context.SaveChanges();
@@ -32,7 +32,7 @@ namespace DocContentAPI.Data
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    var bm = new Bookmark
+                    var bm = new BookmarkModel
                     {
                         DateAdd = DateTime.Now,
                         DocId = i,

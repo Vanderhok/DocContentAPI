@@ -1,5 +1,6 @@
 ﻿using DocContentAPI.Data.Interfaces;
 using DocContentAPI.Data.Models;
+using DocContentAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,41 +10,57 @@ namespace DocContentAPI.Data.Repository
 {
     public class Bookmarks : IBookmarks
     {
-        private readonly LawyerContext bookmarkContext;
+        private readonly LawyerContext context;
 
-        public Bookmarks(LawyerContext bookmarkContext)
+        public Bookmarks(LawyerContext context)
         {
-            this.bookmarkContext = bookmarkContext;
+            this.context = context;
         }
 
-        public Guid Add(Bookmark bookmark)
+        public Guid Add(AddBookmarkModel model)
         {
-            bookmark.Id = Guid.NewGuid();
-            bookmark.DateAdd = DateTime.Now;
+            context.Bookmarks.Add(new BookmarkModel
+            {
+                Id = Guid.NewGuid(),
+                UserId = model.UserId,
+                DateAdd = DateTime.Now,
+                DocId = model.DocId,
+                TopicName = model.TopicName,
+                View = model.View,
+                Page = model.Page,
+                ScrollPos = model.ScrollPos,
+                FolderId = model.FolderId
+            });
 
-            bookmarkContext.Bookmarks.Add(bookmark);
-            bookmarkContext.SaveChanges();
+            context.SaveChanges();
 
-            return bookmark.Id;
+            return model.Id;
         }
 
-        public bool Remove(Bookmark bookmark)
+        public bool Remove(RemoveBookmarkModel model)
         {
-            bookmarkContext.Bookmarks.Remove(bookmark);
-            bookmarkContext.SaveChanges();
+            context.Bookmarks.Remove(new BookmarkModel
+            {
+                Id = model.Id,
+                UserId = model.UserId,
+                DocId = model.DocId,
+                FolderId = model.FolderId
+            });
+
+            context.SaveChanges();
             return true;
         }
 
-        public BookmarkRequest Find(Guid userId, int docId, int view, int page, int scrollPos, Guid folderId)
+        public RequestBookmarkModel Find(FindBookmarkModel model)
         {
-            var bookmarks = bookmarkContext.Bookmarks.Where(x => x.UserId == userId && x.DocId == docId && x.View == view && x.Page == page && x.ScrollPos == scrollPos);
+            var bookmarks = context.Bookmarks.Where(x => x.UserId == model.UserId && x.DocId == model.DocId && x.View == model.View && x.Page == model.Page && x.ScrollPos == model.ScrollPos);
 
-            if (folderId != null)
+            if (model.FolderId != null)
             {
-                bookmarks = bookmarks.Where(x => x.FolderId == folderId);
+                bookmarks = bookmarks.Where(x => x.FolderId == model.FolderId);
             }
 
-            var result = bookmarks.Select(c => new BookmarkRequest
+            var result = bookmarks.Select(c => new RequestBookmarkModel
             {
                 DateAdd = c.DateAdd,
                 DocId = c.DocId,
@@ -58,39 +75,39 @@ namespace DocContentAPI.Data.Repository
             return result.FirstOrDefault();
         }
 
-        public BookmarksResult Get(Guid userId, int fromPos, int count, Guid folderId, int topicId, int pos, DocsSort sort = DocsSort.ByName)
+        public ResultBookmarkModel Get(GetBookmarksModel model)
         {
-            var bookmarks = bookmarkContext.Bookmarks.Where(x => x.UserId == userId);
+            var bookmarks = context.Bookmarks.Where(x => x.UserId == model.UserId);
 
-            if (topicId > 0)
+            if (model.DocId > 0)
             {
-                bookmarks = bookmarks.Where(x => x.DocId == topicId);
+                bookmarks = bookmarks.Where(x => x.DocId == model.DocId);
 
-                if (pos >= 0)
-                    bookmarks = bookmarks.Where(x => x.Page == pos);
+                if (model.Pos >= 0)
+                    bookmarks = bookmarks.Where(x => x.Page == model.Pos);
             }
             else
-                bookmarks = bookmarks.Where(x => x.FolderId == folderId).OrderBy(o => o.FolderId)
+                bookmarks = bookmarks.Where(x => x.FolderId == model.FolderId).OrderBy(o => o.FolderId)
                                             .ThenBy(o => o.DocId).ThenByDescending(o => o.DateAdd);
 
             var result = bookmarks.ToList();
 
-            var topics = new List<List<Bookmark>>();
+            var topics = new List<List<BookmarkModel>>();
             int total = 0;
-            List<Bookmark> bookmarksList = new List<Bookmark>();
+            List<BookmarkModel> bookmarksList = new List<BookmarkModel>();
 
-            foreach (Bookmark bk in result)
+            foreach (BookmarkModel bk in result)
             {
                 if (total > 0)
                 {
-                    if (total >= fromPos && total <= fromPos + count)
+                    if (total >= model.FromPos && total <= model.FromPos + model.Count)
                         topics.Add(bookmarksList);
 
-                    bookmarksList = new List<Bookmark>();
+                    bookmarksList = new List<BookmarkModel>();
                 }
                 total += 1;
 
-                Bookmark bookmark = new Bookmark
+                BookmarkModel bookmark = new BookmarkModel
                 {
                     Id = bk.Id,
                     DocId = bk.DocId,
@@ -118,19 +135,19 @@ namespace DocContentAPI.Data.Repository
             if (total > 0)
                 topics.Add(bookmarksList);
 
-            if (sort == DocsSort.ByName)
+            if (model.Sort == DocsSort.ByName)
                 topics = topics.OrderByDescending(b => b.First().TopicName).ToList();
-            else if (sort == DocsSort.ByAddDate)
+            else if (model.Sort == DocsSort.ByAddDate)
                 topics = topics.OrderByDescending(b => b.Max(b => b.DateAdd)).ToList();
 
-            BookmarksResult bmResult = new BookmarksResult();
+            ResultBookmarkModel bmResult = new ResultBookmarkModel();
             bmResult.Topics = topics;
             bmResult.Total = total;
 
             if (topics.Count > 0)
             {
-                bmResult.FirstPos = fromPos;
-                bmResult.LastPos = fromPos + topics.Count - 1;
+                bmResult.FirstPos = model.FromPos;
+                bmResult.LastPos = model.FromPos + topics.Count - 1;
             }
             else
             {
@@ -141,26 +158,48 @@ namespace DocContentAPI.Data.Repository
             return bmResult;
         }
 
-        public Guid Replace(Guid userId, int docId, string title, int view, int page, int scrollpos, Guid folder_id)
+        public Guid Replace(ReplaceBookmarkModel model)
         {
-            BookmarkRequest bookmarkRequest = Find(userId, docId, view, page, scrollpos, folder_id);
+            RequestBookmarkModel bookmarkRequest =
+                Find(new FindBookmarkModel
+                {
+                    UserId = model.UserId,
+                    DocId = model.DocId,
+                    View = model.View,
+                    Page = model.Page,
+                    ScrollPos = model.ScrollPos,
+                    FolderId = model.FolderId
+                });
 
-            Remove(new Bookmark { Id = bookmarkRequest.Id });
+            Remove(new RemoveBookmarkModel { Id = bookmarkRequest.Id });
 
-            Bookmark bookmark = new Bookmark
-            {
-                UserId = userId,
-                DocId = docId,
-                TopicName = title,
-                View = view,
-                Page = page,
-                ScrollPos = scrollpos,
-                FolderId = folder_id
-            };
-
-            Guid newBmId = Add(bookmark);
+            Guid newBmId =
+                Add(new AddBookmarkModel
+                {
+                    DocId = model.DocId,
+                    FolderId = model.FolderId,
+                    Page = model.Page,
+                    ScrollPos = model.ScrollPos,
+                    TopicName = model.TopicName,
+                    UserId = model.UserId,
+                    View = model.View
+                });
 
             return newBmId;
+        }
+
+        public bool Rename(RenameBookmarkModel model)
+        {
+            context.Bookmarks.Update(new BookmarkModel
+            {
+                Id = model.Id,
+                Name = model.Name,
+                UserId = model.UserId
+            });
+
+            context.SaveChanges();
+
+            return true;
         }
     }
 }

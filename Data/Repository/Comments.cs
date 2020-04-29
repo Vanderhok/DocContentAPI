@@ -18,7 +18,7 @@ namespace DocContentAPI
             this.commentaryContext = commentaryContext;
         }
 
-        public Guid AddComment(Commentary comment)
+        public Guid AddComment(CommentaryModel comment)
         {
             comment.Id = Guid.NewGuid();
             comment.UserId = Guid.NewGuid();
@@ -29,12 +29,12 @@ namespace DocContentAPI
             return comment.Id;
         }
 
-        public Commentary ExampleTreeByDictionary(int docId)
+        public CommentaryModel ExampleTreeByDictionary(int docId)
         {
             var context = commentaryContext.Commentaries.Where(x => x.DocId == docId).ToList();
             foreach (var item in context)
             {
-                item.Answers = new List<Commentary>();
+                item.Answers = new List<CommentaryModel>();
             }
 
             var dict = context.ToDictionary(e => e.Id, e => e);
@@ -55,7 +55,7 @@ namespace DocContentAPI
             if (context != null && context.Any())
             {
                 List<RequestComment> requestList = new List<RequestComment> { };
-                foreach (Commentary commentary in context)
+                foreach (CommentaryModel commentary in context)
                 {
                     requestList.Add(GetChilds(commentary));
                 }
@@ -66,9 +66,9 @@ namespace DocContentAPI
                 return null;
         }
 
-        public IEnumerable<Commentary> GetComments(Guid userId) => commentaryContext.Commentaries.Where(x => x.UserId == userId);
+        public IEnumerable<CommentaryModel> GetComments(Guid userId) => commentaryContext.Commentaries.Where(x => x.UserId == userId);
 
-        public Commentary GetCommentData(Guid id)
+        public CommentaryModel GetCommentData(Guid id)
         {
 
             return commentaryContext.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
@@ -108,7 +108,7 @@ namespace DocContentAPI
             return GetChilds(context);
         }
 
-        private RequestComment GetChilds(Commentary a)
+        private RequestComment GetChilds(CommentaryModel a)
         {
             var b = new RequestComment
             {
