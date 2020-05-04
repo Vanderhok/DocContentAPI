@@ -20,7 +20,7 @@ namespace DocContentAPI.Controllers
         }
 
         [HttpPost("AddBookmark")]
-        public ActionResult AddBookmark(AddBookmarkModel model)
+        public ActionResult AddBookmark(BookmarkAddModel model)
         {
             bookmarks.Add(model);
 
@@ -28,34 +28,34 @@ namespace DocContentAPI.Controllers
         }
 
         [HttpDelete("RemoveBookmarks")]
-        public ActionResult RemoveBookmarks(RemoveBookmarkModel model)
+        public ActionResult RemoveBookmarks(BookmarkRemoveModel model)
         {
             bookmarks.Remove(model);
             return Ok();
         }
 
         [HttpPut("ReplaceBookmark")]
-        public ActionResult ReplaceBookmark(ReplaceBookmarkModel model)
+        public ActionResult ReplaceBookmark(BookmarkReplaceModel model)
         {
             bookmarks.Replace(model);
             return Ok();
         }
 
         [HttpPut("RenameBookmark")]
-        public ActionResult RenameBookmark(RenameBookmarkModel model)
+        public ActionResult RenameBookmark(BookmarkRenameModel model)
         {
             bookmarks.Rename(model);
             return Ok();
         }
 
         [HttpGet("FindBookmark")]
-        public RequestBookmarkModel FindBookmark(FindBookmarkModel model)
+        public BookmarkRequestModel FindBookmark(BookmarkFindModel model)
         {
             return bookmarks.Find(model);
         }
 
         [HttpGet("GetBookmarks")]
-        public ResultBookmarkModel GetBookmarks(GetBookmarksModel model)
+        public BookmarkResultModel GetBookmarks(BookmarkGetModel model)
         {
             return bookmarks.Get(model);
         }

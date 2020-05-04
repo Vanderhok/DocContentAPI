@@ -32,6 +32,7 @@ namespace DocContentAPI
 
             services.AddTransient<IComments, Comments>();
             services.AddTransient<IBookmarks, Bookmarks>();
+            services.AddTransient<IFolders, Folders>();
 
             services.AddDbContext<LawyerContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -47,7 +48,6 @@ namespace DocContentAPI
                 context = scope.ServiceProvider.GetRequiredService<LawyerContext>();
                 DBObjects.Initial(context);
             }
-
 
             if (env.IsDevelopment())
             {

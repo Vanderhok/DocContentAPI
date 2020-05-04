@@ -4,6 +4,7 @@ using DocContentAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DocContentAPI.Data.Repository
@@ -17,7 +18,7 @@ namespace DocContentAPI.Data.Repository
             this.context = context;
         }
 
-        public Guid Add(AddBookmarkModel model)
+        public Guid Add(BookmarkAddModel model)
         {
             context.Bookmarks.Add(new BookmarkModel
             {
@@ -37,7 +38,7 @@ namespace DocContentAPI.Data.Repository
             return model.Id;
         }
 
-        public bool Remove(RemoveBookmarkModel model)
+        public bool Remove(BookmarkRemoveModel model)
         {
             context.Bookmarks.Remove(new BookmarkModel
             {
@@ -51,7 +52,7 @@ namespace DocContentAPI.Data.Repository
             return true;
         }
 
-        public RequestBookmarkModel Find(FindBookmarkModel model)
+        public BookmarkRequestModel Find(BookmarkFindModel model)
         {
             var bookmarks = context.Bookmarks.Where(x => x.UserId == model.UserId && x.DocId == model.DocId && x.View == model.View && x.Page == model.Page && x.ScrollPos == model.ScrollPos);
 
@@ -60,7 +61,7 @@ namespace DocContentAPI.Data.Repository
                 bookmarks = bookmarks.Where(x => x.FolderId == model.FolderId);
             }
 
-            var result = bookmarks.Select(c => new RequestBookmarkModel
+            var result = bookmarks.Select(c => new BookmarkRequestModel
             {
                 DateAdd = c.DateAdd,
                 DocId = c.DocId,
@@ -75,28 +76,30 @@ namespace DocContentAPI.Data.Repository
             return result.FirstOrDefault();
         }
 
-        public ResultBookmarkModel Get(GetBookmarksModel model)
-        {
-            var bookmarks = context.Bookmarks.Where(x => x.UserId == model.UserId);
+        public BookmarkResultModel Get(BookmarkGetModel model)
+        {//S* UserId должен быть обязательным
+
+            var query = context.Bookmarks.Where(x => x.UserId == model.UserId);
 
             if (model.DocId > 0)
             {
-                bookmarks = bookmarks.Where(x => x.DocId == model.DocId);
+                query = query.Where(x => x.DocId == model.DocId);
 
                 if (model.Pos >= 0)
-                    bookmarks = bookmarks.Where(x => x.Page == model.Pos);
+                    query = query.Where(x => x.Page == model.Pos);
             }
-            else
-                bookmarks = bookmarks.Where(x => x.FolderId == model.FolderId).OrderBy(o => o.FolderId)
-                                            .ThenBy(o => o.DocId).ThenByDescending(o => o.DateAdd);
+            else if (model.FolderId != Guid.Empty)
+                query = query.Where(x => x.FolderId == model.FolderId);
 
-            var result = bookmarks.ToList();
+            query = query.OrderBy(o => o.FolderId).ThenBy(o => o.DocId).ThenByDescending(o => o.DateAdd);
+
+            var result = query.ToList();
 
             var topics = new List<List<BookmarkModel>>();
             int total = 0;
             List<BookmarkModel> bookmarksList = new List<BookmarkModel>();
 
-            foreach (BookmarkModel bk in result)
+            foreach (var bk in result)
             {
                 if (total > 0)
                 {
@@ -140,7 +143,7 @@ namespace DocContentAPI.Data.Repository
             else if (model.Sort == DocsSort.ByAddDate)
                 topics = topics.OrderByDescending(b => b.Max(b => b.DateAdd)).ToList();
 
-            ResultBookmarkModel bmResult = new ResultBookmarkModel();
+            BookmarkResultModel bmResult = new BookmarkResultModel();
             bmResult.Topics = topics;
             bmResult.Total = total;
 
@@ -158,10 +161,10 @@ namespace DocContentAPI.Data.Repository
             return bmResult;
         }
 
-        public Guid Replace(ReplaceBookmarkModel model)
+        public Guid Replace(BookmarkReplaceModel model)
         {
-            RequestBookmarkModel bookmarkRequest =
-                Find(new FindBookmarkModel
+            BookmarkRequestModel bookmarkRequest =
+                Find(new BookmarkFindModel
                 {
                     UserId = model.UserId,
                     DocId = model.DocId,
@@ -171,10 +174,10 @@ namespace DocContentAPI.Data.Repository
                     FolderId = model.FolderId
                 });
 
-            Remove(new RemoveBookmarkModel { Id = bookmarkRequest.Id });
+            Remove(new BookmarkRemoveModel { Id = bookmarkRequest.Id });
 
             Guid newBmId =
-                Add(new AddBookmarkModel
+                Add(new BookmarkAddModel
                 {
                     DocId = model.DocId,
                     FolderId = model.FolderId,
@@ -188,7 +191,7 @@ namespace DocContentAPI.Data.Repository
             return newBmId;
         }
 
-        public bool Rename(RenameBookmarkModel model)
+        public bool Rename(BookmarkRenameModel model)
         {
             context.Bookmarks.Update(new BookmarkModel
             {

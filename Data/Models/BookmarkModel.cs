@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace DocContentAPI.Data.Models
     public class BookmarkModel
     {
         public Guid Id { get; set; }
+        //[ForeignKey("Folder")]
         public Guid FolderId { get; set; }
         public Guid UserId { get; set; }
         public int DocId { get; set; }

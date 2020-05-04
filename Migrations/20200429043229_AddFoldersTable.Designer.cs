@@ -4,14 +4,16 @@ using DocContentAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DocContentAPI.Migrations
 {
     [DbContext(typeof(LawyerContext))]
-    partial class CommentaryContextModelSnapshot : ModelSnapshot
+    [Migration("20200429043229_AddFoldersTable")]
+    partial class AddFoldersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace DocContentAPI.Migrations
                     b.Property<int>("DocId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("FolderId")
+                    b.Property<Guid>("FolderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -69,12 +71,10 @@ namespace DocContentAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FolderId");
-
                     b.ToTable("Bookmarks");
                 });
 
-            modelBuilder.Entity("DocContentAPI.Data.Models.FolderModel", b =>
+            modelBuilder.Entity("DocContentAPI.Data.Models.FoldersModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,16 +145,9 @@ namespace DocContentAPI.Migrations
                     b.ToTable("Commentaries");
                 });
 
-            modelBuilder.Entity("DocContentAPI.Data.Models.BookmarkModel", b =>
+            modelBuilder.Entity("DocContentAPI.Data.Models.FoldersModel", b =>
                 {
-                    b.HasOne("DocContentAPI.Data.Models.FolderModel", "Folder")
-                        .WithMany()
-                        .HasForeignKey("FolderId");
-                });
-
-            modelBuilder.Entity("DocContentAPI.Data.Models.FolderModel", b =>
-                {
-                    b.HasOne("DocContentAPI.Data.Models.FolderModel", "ParentFolder")
+                    b.HasOne("DocContentAPI.Data.Models.FoldersModel", "ParentFolder")
                         .WithMany("SubFolders")
                         .HasForeignKey("ParentFolderId");
                 });

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DocContentAPI.Models
 {
-    public class ResultBookmarkModel
+    public class BookmarkResultModel
     {
         public int Total { get; set; }
         public int FirstPos { get; set; }

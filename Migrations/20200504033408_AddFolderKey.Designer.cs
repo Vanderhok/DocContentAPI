@@ -4,14 +4,16 @@ using DocContentAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DocContentAPI.Migrations
 {
     [DbContext(typeof(LawyerContext))]
-    partial class CommentaryContextModelSnapshot : ModelSnapshot
+    [Migration("20200504033408_AddFolderKey")]
+    partial class AddFolderKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

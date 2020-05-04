@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace DocContentAPI.Models
 {
-    public class FindBookmarkModel
+    public class BookmarksPutInFolderModel
     {
         public Guid UserId { get; set; }
+        public Guid BookmarkId { get; set; }
+        public Guid FromFolderId { get; set; }
+        public Guid DestFolderId { get; set; }
         public int DocId { get; set; }
-        public int View { get; set; }
-        public int Page { get; set; }
-        public int ScrollPos { get; set; }
-        public Guid FolderId { get; set; }
     }
 }

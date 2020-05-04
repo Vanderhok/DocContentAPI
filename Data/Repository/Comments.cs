@@ -11,11 +11,11 @@ namespace DocContentAPI
 {
     public class Comments : IComments
     {
-        private readonly LawyerContext commentaryContext;
+        private readonly LawyerContext context;
 
         public Comments(LawyerContext commentaryContext)
         {
-            this.commentaryContext = commentaryContext;
+            this.context = commentaryContext;
         }
 
         public Guid AddComment(CommentaryModel comment)
@@ -23,22 +23,22 @@ namespace DocContentAPI
             comment.Id = Guid.NewGuid();
             comment.UserId = Guid.NewGuid();
 
-            commentaryContext.Commentaries.Add(comment);
-            commentaryContext.SaveChanges();
+            context.Commentaries.Add(comment);
+            context.SaveChanges();
 
             return comment.Id;
         }
 
         public CommentaryModel ExampleTreeByDictionary(int docId)
         {
-            var context = commentaryContext.Commentaries.Where(x => x.DocId == docId).ToList();
-            foreach (var item in context)
+            var result = context.Commentaries.Where(x => x.DocId == docId).ToList();
+            foreach (var item in result)
             {
                 item.Answers = new List<CommentaryModel>();
             }
 
-            var dict = context.ToDictionary(e => e.Id, e => e);
-            foreach (var elem in context)
+            var dict = result.ToDictionary(e => e.Id, e => e);
+            foreach (var elem in result)
             {
                 if (elem.ParentCommentary != null)
                     dict[elem.ParentCommentary.Id].Answers.Add(elem);
@@ -49,13 +49,13 @@ namespace DocContentAPI
         public IEnumerable<RequestComment> GetComments(int docId)
         {
             //ExampleTreeByDictionary(docId);
-            var context = commentaryContext.Commentaries.Where(x => x.DocId == docId).ToList();
-            context = context.Where(x => x.ParentCommentary == null).ToList();
+            var result = context.Commentaries.Where(x => x.DocId == docId).ToList();
+            result = result.Where(x => x.ParentCommentary == null).ToList();
 
-            if (context != null && context.Any())
+            if (result != null && result.Any())
             {
                 List<RequestComment> requestList = new List<RequestComment> { };
-                foreach (CommentaryModel commentary in context)
+                foreach (CommentaryModel commentary in result)
                 {
                     requestList.Add(GetChilds(commentary));
                 }
@@ -66,12 +66,12 @@ namespace DocContentAPI
                 return null;
         }
 
-        public IEnumerable<CommentaryModel> GetComments(Guid userId) => commentaryContext.Commentaries.Where(x => x.UserId == userId);
+        public IEnumerable<CommentaryModel> GetComments(Guid userId) => context.Commentaries.Where(x => x.UserId == userId);
 
         public CommentaryModel GetCommentData(Guid id)
         {
 
-            return commentaryContext.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
+            return context.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
         }
 
         public RequestComment GetCommentWithAnswers(Guid id)
@@ -90,7 +90,7 @@ namespace DocContentAPI
             }
             #endregion
 
-            var context = commentaryContext.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
+            var result = context.Commentaries.Include(x => x.Answers).FirstOrDefault(x => x.Id == id);
 
             #region Добавление вложенного для проверки
             //List<Commentary> com = new List<Commentary>
@@ -105,7 +105,7 @@ namespace DocContentAPI
             //context.Answers[0].Answers = com;
             #endregion
 
-            return GetChilds(context);
+            return GetChilds(result);
         }
 
         private RequestComment GetChilds(CommentaryModel a)

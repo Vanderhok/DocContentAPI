@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DocContentAPI.Models
 {
-    public class GetBookmarksModel
+    public class BookmarkGetModel
     {
         public Guid UserId { get; set; }
         public int FromPos { get; set; }
@@ -15,5 +15,6 @@ namespace DocContentAPI.Models
         public int DocId { get; set; }
         public int Pos { get; set; }
         public DocsSort Sort { get; set; }
+        public FolderModel Folders { get; set; }
     }
 }

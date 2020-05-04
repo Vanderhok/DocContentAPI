@@ -9,17 +9,17 @@ namespace DocContentAPI.Data.Interfaces
 {
     public interface IBookmarks
     {
-        public Guid Add(AddBookmarkModel model);
+        public Guid Add(BookmarkAddModel model);
 
-        public bool Remove(RemoveBookmarkModel model);
+        public bool Remove(BookmarkRemoveModel model);
 
-        public RequestBookmarkModel Find(FindBookmarkModel model);
+        public BookmarkRequestModel Find(BookmarkFindModel model);
 
-        public ResultBookmarkModel Get(GetBookmarksModel model);
+        public BookmarkResultModel Get(BookmarkGetModel model);
 
-        public Guid Replace(ReplaceBookmarkModel model);
+        public Guid Replace(BookmarkReplaceModel model);
 
-        public bool Rename(RenameBookmarkModel model);
+        public bool Rename(BookmarkRenameModel model);
     }
 
 

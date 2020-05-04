@@ -17,12 +17,17 @@ namespace DocContentAPI.Data
 
         public DbSet<CommentaryModel> Commentaries { get; set; }
         public DbSet<BookmarkModel> Bookmarks { get; set; }
+        public DbSet<FolderModel> Folders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CommentaryModel>()
-                .HasOne(o => o.ParentCommentary)
-                .WithMany(m => m.Answers);
+                .HasOne(p => p.ParentCommentary)
+                .WithMany(a => a.Answers);
+
+            modelBuilder.Entity<FolderModel>()
+                .HasOne(p => p.ParentFolder)
+                .WithMany(a => a.SubFolders);
         }
     }
 }
